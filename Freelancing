@@ -1,0 +1,49 @@
+using Microsoft.AspNetCore.Mvc;
+using WebApplication2.Modles;
+
+namespace WebApplication2.Controllers
+{
+    [ApiController]
+    [Route("v1/[controller]")]
+    public class ProjectControllers : Controller
+    {
+        private List<Project> projects = new List<Project>();
+        [HttpPost]
+        public IActionResult CreatProject([FromBody] Project project)
+
+
+        {
+            if (project == null) { return NotFound("not found"); }
+            projects.Add(project);
+            return CreatedAtAction("CreatProject", new { id = project.Id }, projects);
+        }
+        [HttpGet]
+        public IActionResult GetAllProjects()
+        {
+            return Ok(projects);
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProject(int id)
+        {
+            var project = projects.FirstOrDefault(t => t.Id == id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            projects.Remove(project);
+            return NoContent(); // 204 No Content to indicate successful deletion
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetProjectById(int id)
+        {
+            var project = trainers.FirstOrDefault(t => t.Id == id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return Ok(project);
+        }
+    }
+
+}
